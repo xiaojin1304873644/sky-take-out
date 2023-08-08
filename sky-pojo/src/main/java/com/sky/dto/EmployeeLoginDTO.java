@@ -10,7 +10,7 @@ import java.io.Serializable;
 @ApiModel(description = "员工登录时传递的数据模型")
 public class EmployeeLoginDTO implements Serializable {
 
-    @ApiModelProperty("用户名")
+    @ApiModelProperty(name = "用户名", required = true)
     private String username;
 
     @ApiModelProperty("密码")

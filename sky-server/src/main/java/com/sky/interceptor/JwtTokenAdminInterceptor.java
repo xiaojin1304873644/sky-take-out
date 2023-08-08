@@ -1,6 +1,7 @@
 package com.sky.interceptor;
 
 import com.sky.constant.JwtClaimsConstant;
+import com.sky.context.BaseContext;
 import com.sky.properties.JwtProperties;
 import com.sky.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -32,6 +33,9 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
      * @throws Exception
      */
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
+        System.out.println("当前线程的id："+Thread.currentThread().getId());
+
         //判断当前拦截到的是Controller的方法还是其他资源
         if (!(handler instanceof HandlerMethod)) {
             //当前拦截到的不是动态方法，直接放行
@@ -47,11 +51,20 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
             Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
             Long empId = Long.valueOf(claims.get(JwtClaimsConstant.EMP_ID).toString());
             log.info("当前员工id：", empId);
+            BaseContext.setCurrentId(empId);
             //3、通过，放行
             return true;
         } catch (Exception ex) {
             //4、不通过，响应401状态码
             response.setStatus(401);
+//            String data = "下载失败";
+//            response.setHeader("content-type", "text/html;charset=UTF-8");//通过设置响应头控制浏览器以UTF-8的编码显示数据
+//            response.getOutputStream().write(data.getBytes("UTF-8"));
+//            request.setCharacterEncoding("utf-8");
+//            // 设置响应的内容类型和编码
+//            response.setContentType("text/html;charset=utf-8");
+//            // 设置响应码以及错误信息
+//            response.sendError(409);
             return false;
         }
     }
