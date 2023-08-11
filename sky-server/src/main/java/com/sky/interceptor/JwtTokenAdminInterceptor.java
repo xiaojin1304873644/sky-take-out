@@ -46,7 +46,7 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
         String token = request.getHeader(jwtProperties.getAdminTokenName());
 
         //2、校验令牌
-        try {
+//        try {
             log.info("jwt校验:{}", token);
             Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
             Long empId = Long.valueOf(claims.get(JwtClaimsConstant.EMP_ID).toString());
@@ -54,9 +54,9 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
             BaseContext.setCurrentId(empId);
             //3、通过，放行
             return true;
-        } catch (Exception ex) {
+//        } catch (Exception ex) {
             //4、不通过，响应401状态码
-            response.setStatus(401);
+//            response.setStatus(401);
 //            String data = "下载失败";
 //            response.setHeader("content-type", "text/html;charset=UTF-8");//通过设置响应头控制浏览器以UTF-8的编码显示数据
 //            response.getOutputStream().write(data.getBytes("UTF-8"));
@@ -65,7 +65,7 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
 //            response.setContentType("text/html;charset=utf-8");
 //            // 设置响应码以及错误信息
 //            response.sendError(409);
-            return false;
-        }
+//            return false;
+//        }
     }
 }

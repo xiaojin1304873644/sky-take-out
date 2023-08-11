@@ -1,16 +1,20 @@
 package com.sky.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
+import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
+import com.sky.result.PageResult;
 import com.sky.service.EmployeeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -69,7 +74,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public void save(EmployeeDTO employeeDTO) {
-        System.out.println("当前线程的id："+Thread.currentThread().getId());
+        System.out.println("当前线程的id：" + Thread.currentThread().getId());
 
         Employee employee = new Employee();
 
@@ -91,5 +96,29 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.insert(employee);
+    }
+
+    /**
+     * 分页查询
+     * <p>
+     * PageHelper:这个插件底层是基于Mybatis的拦截器来实现，他会把我们的后面的一条SQL进行动态的拼接
+     * （会动态的把我们的limit关键字拼进去，并且把这两个参数动态的计算（页码、每页记录数）
+     * 最后把计算出的两个参数和limit拼接到SQL实现分页
+     *
+     * @param employeePageQueryDTO
+     * @return
+     */
+    @Override
+    public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
+        // select * from employee limit 0,10
+        // 开始分页查询
+        PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
+
+        Page<Employee> page = employeeMapper.pageQuery(employeePageQueryDTO);
+
+        long total = page.getTotal();
+        List<Employee> records = page.getResult();
+
+        return new PageResult(total, records);
     }
 }

@@ -32,6 +32,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public Result exceptionHandler(SQLIntegrityConstraintViolationException ex) {
         // Duplicate entry 'zhangsan' for key 'employee.idx_username'
+        // io.jsonwebtoken.ExpiredJwtException: JWT expired at 2023-08-09T08:43:20Z. Current time: 2023-08-10T10:18:35Z, a difference of 92115615 milliseconds.  Allowed clock skew: 0 milliseconds.
         String message = ex.getMessage();
         if (message.contains("Duplicate entry")) {
             String[] split = message.split(" ");
