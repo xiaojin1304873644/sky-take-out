@@ -58,7 +58,7 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
             return true;
 //        }catch (Exception ex) {
         } catch (IllegalArgumentException | SignatureException ex) {
-            //4、不通过，响应401状态码
+            // 4、不通过，响应 401 状态码
             response.setStatus(401);
 //            String data = "下载失败";
 //            response.setHeader("content-type", "text/html;charset=UTF-8");//通过设置响应头控制浏览器以UTF-8的编码显示数据
